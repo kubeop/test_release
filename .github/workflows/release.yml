@@ -26,7 +26,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Get k8s Version
-      id: get_version
+      id: get_k8s_version
       run: |
         k8s_version=$(python -c "import yaml; data = yaml.safe_load(open('group_vars/all.yml')); print(data['kubernetes']['version'])")
         echo "k8s_version=$k8s_version" >> $GITHUB_ENV
@@ -55,3 +55,25 @@ jobs:
           kube-scheduler
           kubelet
           kube-proxy
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyyaml
+
+    - name: Run script
+      run: |
+        python generate.py
+
+    - name: Sync Images
+      uses: hhyasdf/image-sync-action@v1.1
+      with:
+        auth_file: ./auth.yaml
+        images_file: ./images.yaml
+        version: latest
+        proc: 6
+      env:
+        ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+        ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+        DKH_USERNAME: ${{ secrets.DKH_USERNAME }}
+        DKH_PASSWORD: ${{ secrets.DKH_PASSWORD }}
