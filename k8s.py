@@ -103,11 +103,6 @@ def tag_image(client, src_image, dst_image):
     except APIError as e:
         print(f"Tag failed: {e}")
 
-def tag_exists(registry, repository, tag):
-    url = f"https://{registry}/v2/{repository}/manifests/{tag}"
-    response = requests.head(acr_repo, auth=(acr_username, acr_password))
-    return response.status_code == 200
-
 def push_image(client, image_name):
     try:
         client.images.push(image_name)
@@ -122,14 +117,10 @@ def sync_images_to_acr():
             name = image.split('/')[-1]
             src_repo_url = f"{image}:{version}"
             dst_repo_url = f"{acr_repo}/{acr_namespace}/{name}:{version}"
+            
             print(f"Syncing {src_repo_url} to {dst_repo_url}")
-
-            repository = f"{acr_namespace}/{name}"
-            if tag_exists(acr_repo, repository, version):
-                print(f"Tag already exists: {dst_repo_url}. Skipping push.")
-            else:
-                pull_image(client, src_repo_url)
-                tag_image(client, src_repo_url, dst_repo_url)
-                push_image(client, dst_repo_url)
+            pull_image(client, src_repo_url)
+            tag_image(client, src_repo_url, dst_repo_url)
+            push_image(client, dst_repo_url)
 
 sync_images_to_acr()
