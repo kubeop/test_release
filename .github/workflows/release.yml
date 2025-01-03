@@ -2,12 +2,12 @@ name: Docker Image && Kubernetes Release
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - 'group_vars/all.yml'
 
   pull_request:
-    branches:
-      - main
+    paths:
+      - 'group_vars/all.yml'
 
 jobs:
   build:
