@@ -37,7 +37,7 @@ try:
     release = repo.get_release(k8s_version)
     print(f'Release {k8s_version} already exists. Skipping upload.')
 except:
-    release = repo.create_git_release(k8s_version, f'Release {k8s_version}', "Release description")
+    release = repo.create_git_release(k8s_version, f'Release {k8s_version}')
     print(f'Created new release {k8s_version}.')
     # 遍历二进制文件列表并下载
     for binary in binaries:
@@ -50,7 +50,7 @@ except:
     
             # 上传到 GitHub Release
             with open(save_path, 'rb') as file:
-                release.upload_asset(file, name=binary)
+                release.upload_asset(file, name=binary, label=binary)
             print(f'Successfully uploaded {binary} to GitHub Release')
         except Exception as e:
             print(f'An error occurred while downloading or uploading {binary}: {e}')
