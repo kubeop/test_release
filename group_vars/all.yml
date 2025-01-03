@@ -37,6 +37,7 @@ cert:
   # 签发证书的时间
   day: 3650d
 
+# Docker Settings
 # https://github.com/etcd-io/etcd
 etcd:
   # etcd 安装包下载地址
