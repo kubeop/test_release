@@ -37,7 +37,7 @@ try:
     release = repo.get_release(k8s_version)
     print(f'Release {k8s_version} already exists. Skipping upload.')
 except:
-    release = repo.create_git_release(k8s_version, f'Release {k8s_version}', "Release description")
+    release = repo.create_git_release(k8s_version, f'Release {k8s_version}', "Kubernetes binaries")
     print(f'Created new release {k8s_version}.')
     # 遍历二进制文件列表并下载
     for binary in binaries:
