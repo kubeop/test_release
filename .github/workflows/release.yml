@@ -2,10 +2,14 @@ name: Docker Image && Kubernetes Release
 
 on:
   push:
+    branches:
+      - "v*.*.*"
     paths:
       - 'group_vars/all.yml'
 
   pull_request:
+    branches:
+      - "v*.*.*"
     paths:
       - 'group_vars/all.yml'
 
@@ -31,6 +35,6 @@ jobs:
         ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
         ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
         GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-        GIT_REPOS: ${{ github.repository }}
+        GIT_REPO: ${{ github.repository }}
       run: |
         python k8s.py
