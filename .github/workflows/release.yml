@@ -32,9 +32,9 @@ jobs:
 
     - name: Run script
       env:
-        REPO_NAME: ${{ github.repository }}
         ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
         ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
       run: |
         python k8s.py
