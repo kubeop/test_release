@@ -50,7 +50,7 @@ except:
                 print(f'Successfully downloaded {binary} to {save_path}')
                 # 上传到 GitHub Release
                 with open(save_path, 'rb') as file:
-                    release.upload_asset(file, name=binary)
+                    release.upload_asset(file, name=binary, content_type='application/octet-stream')
                 print(f'Successfully uploaded {binary} to GitHub Release')
             else:
                 print(f'Failed to download {binary} from {url}')
