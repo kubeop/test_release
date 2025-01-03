@@ -49,9 +49,13 @@ except:
             if os.path.exists(save_path):
                 print(f'Successfully downloaded {binary} to {save_path}')
                 # 上传到 GitHub Release
-                with open(save_path, 'rb') as file:
-                    release.upload_asset(file, name=binary, content_type='application/octet-stream')
-                print(f'Successfully uploaded {binary} to GitHub Release')
+                try:
+                    print(f'Uploading {binary} to GitHub Release')
+                    with open(save_path, 'rb') as file:
+                        release.upload_asset(file, name=binary, content_type='application/octet-stream')
+                    print(f'Successfully uploaded {binary} to GitHub Release')
+                except Exception as upload_error:
+                    print(f'Failed to upload {binary} to GitHub Release: {upload_error}')
             else:
                 print(f'Failed to download {binary} from {url}')
         except Exception as e:
