@@ -25,11 +25,11 @@ save_dir = './k8s_binaries'
 os.makedirs(save_dir, exist_ok=True)
 
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
-GITHUB_REPO = os.environ.get('GITHUB_REPOSITORY')
+REPO_NAME = os.environ.get('GITHUB_REPOSITORY')
 
 # 初始化 GitHub 客户端
 g = Github(GITHUB_TOKEN)
-repo = g.get_repo(GITHUB_REPO)
+repo = g.get_repo(REPO_NAME)
 
 # 检查 Release 是否存在
 try:
@@ -38,7 +38,6 @@ try:
 except:
     release = repo.create_git_release(k8s_version, f'Release {k8s_version}', "Release description")
     print(f'Created new release {k8s_version}.')
-
     # 遍历二进制文件列表并下载
     for binary in binaries:
         url = f'{base_url}/{binary}'
