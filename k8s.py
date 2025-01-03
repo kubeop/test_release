@@ -38,21 +38,22 @@ try:
 except:
     release = repo.create_git_release(k8s_version, f'Release {k8s_version}', "Release description")
     print(f'Created new release {k8s_version}.')
-    # 遍历二进制文件列表并下载
-    for binary in binaries:
-        url = f'{base_url}/{binary}'
-        save_path = os.path.join(save_dir, binary)
-        try:
-            print(f'Downloading {binary} from {url}')
-            wget.download(url, save_path)
-            print(f'Successfully downloaded {binary} to {save_path}')
-    
-            # 上传到 GitHub Release
-            with open(save_path, 'rb') as file:
-                release.upload_asset(file, name=binary)
-            print(f'Successfully uploaded {binary} to GitHub Release')
-        except Exception as e:
-            print(f'An error occurred while downloading or uploading {binary}: {e}')
+
+# 遍历二进制文件列表并下载
+for binary in binaries:
+    url = f'{base_url}/{binary}'
+    save_path = os.path.join(save_dir, binary)
+    try:
+        print(f'Downloading {binary} from {url}')
+        wget.download(url, save_path)
+        print(f'Successfully downloaded {binary} to {save_path}')
+
+        # 上传到 GitHub Release
+        with open(save_path, 'rb') as file:
+            release.upload_asset(file, name=binary)
+        print(f'Successfully uploaded {binary} to GitHub Release')
+    except Exception as e:
+        print(f'An error occurred while downloading or uploading {binary}: {e}')
 
 # 阿里云 ACR 镜像仓库信息
 acr_repo = 'registry.cn-hangzhou.aliyuncs.com'
