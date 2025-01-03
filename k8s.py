@@ -25,12 +25,12 @@ binaries = [
 save_dir = './k8s_binaries'
 os.makedirs(save_dir, exist_ok=True)
 
-GITHUB_TOKEN = os.environ.get('GIT_TOKEN')
-REPO_NAME = os.environ.get('GIT_REPOS')
+GIT_TOKEN = os.environ.get('GIT_TOKEN')
+GIT_REPOS = os.environ.get('GIT_REPOS')
 
 # 初始化 GitHub 客户端
-g = Github(GITHUB_TOKEN)
-repo = g.get_repo(REPO_NAME)
+g = Github(GIT_TOKEN)
+repo = g.get_repo(GIT_REPOS)
 
 # 检查 Release 是否存在
 try:
