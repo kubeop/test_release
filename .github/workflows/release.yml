@@ -16,35 +16,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.12]
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Get k8s Version
-      id: get_version
+    - name: Install dependencies
       run: |
-        k8s_version=$(python -c "import yaml; data = yaml.safe_load(open('group_vars/all.yml')); print(data['kubernetes']['version'])")
-        echo "k8s_version=$k8s_version" >> $GITHUB_ENV
-        
-     - name: Download
+        python -m pip install --upgrade pip
+        pip install wget docker pyyaml PyGithub
+
+    - name: Run script
+      env:
+        ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+        ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPO: ${{ github.repository }}
       run: |
-        wget https://dl.k8s.io/release/${{ env.k8s_version }}/bin/linux/amd64/kubectl
-        wget https://dl.k8s.io/release/${{ env.k8s_version }}/bin/linux/amd64/kube-apiserver
-        wget https://dl.k8s.io/release/${{ env.k8s_version }}/bin/linux/amd64/kube-controller-manager
-        wget https://dl.k8s.io/release/${{ env.k8s_version }}/bin/linux/amd64/kube-scheduler
-        wget https://dl.k8s.io/release/${{ env.k8s_version }}/bin/linux/amd64/kubelet
-        wget https://dl.k8s.io/release/${{ env.k8s_version }}/bin/linux/amd64/kube-proxy
-      
-    - name: Push Release
-      uses: softprops/action-gh-release@v2
-      with:
-        token: ${{ secrets.GIT_TOKEN }}
-        tag_name:  ${{ env.k8s_version }}
-        preserve_order: true
-        files: |
-          kubectl
-          kube-apiserver
-          kube-controller-manager
-          kube-scheduler
-          kubelet
-          kube-proxy
+        python k8s.py

@@ -25,7 +25,7 @@ save_dir = './k8s_binaries'
 os.makedirs(save_dir, exist_ok=True)
 
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
-REPO_NAME = os.environ.get('GITHUB_REPOSITORY')
+REPO_NAME = os.environ.get('GITHUB_REPO')
 
 # 初始化 GitHub 客户端
 g = Github(GITHUB_TOKEN)
@@ -102,6 +102,11 @@ def tag_image(client, src_image, dst_image):
     except APIError as e:
         print(f"Tag failed: {e}")
 
+def tag_exists(repository, tag):
+    url = f"https://{acr_repo}/v2/{repository}/manifests/{tag}"
+    response = requests.head(acr_repo, auth=(acr_username, acr_password))
+    return response.status_code == 200
+
 def push_image(client, image_name):
     try:
         client.images.push(image_name)
@@ -118,6 +123,9 @@ def sync_images_to_acr():
             print(f"Syncing {src_repo_url} to {dst_repo_url}")
             pull_image(client, src_repo_url)
             tag_image(client, src_repo_url, dst_repo_url)
-            push_image(client, dst_repo_url)
+            if tag_exists({acr_namespace}/{image.split('/')[-1]}, {version}):
+                print(f"Tag already exists: {dst_repo_url}. Skipping push.")
+            else:
+                push_image(client, dst_repo_url)
 
 sync_images_to_acr()

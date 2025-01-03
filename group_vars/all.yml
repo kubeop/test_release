@@ -59,8 +59,7 @@ loadbalance:
   ip: 10.43.75.200
   port: 6443
   # domain_name: apiserver.kubeop.com
-  # access_ip:
-  #   - 10.43.75.200
+
 
 # Kubernetes Settings
 kubernetes:
