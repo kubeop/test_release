@@ -51,8 +51,7 @@ except:
                 # 上传到 GitHub Release
                 try:
                     print(f'Uploading {binary} to GitHub Release')
-                    with open(save_path, 'rb') as file:
-                        release.upload_asset(file, name=binary, content_type='application/octet-stream')
+                    release.upload_asset(content_type='application/binary', name=binary, asset=open(save_path, 'rb'))
                     print(f'Successfully uploaded {binary} to GitHub Release')
                 except Exception as upload_error:
                     print(f'Failed to upload {binary} to GitHub Release: {upload_error}')
