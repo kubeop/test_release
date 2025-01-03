@@ -19,6 +19,8 @@ ntp:
     - "ntp2.aliyun.com iburst"
     - "ntp3.aliyun.com iburst"
 
+
+# fsdfgs
 # Repository 软件源
 repo:
   # 建议使用nexus配置代理使用
