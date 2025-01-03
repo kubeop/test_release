@@ -18,6 +18,7 @@ ntp:
     - "ntp1.aliyun.com iburst"
     - "ntp2.aliyun.com iburst"
     - "ntp3.aliyun.com iburst"
+    - "ntp4.aliyun.com iburst"
 
 
 # fsdfgs
