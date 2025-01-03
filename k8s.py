@@ -46,12 +46,14 @@ except:
         try:
             print(f'Downloading {binary} from {url}')
             wget.download(url, save_path)
-            print(f'Successfully downloaded {binary} to {save_path}')
-    
-            # 上传到 GitHub Release
-            with open(save_path, 'rb') as file:
-                release.upload_asset(file, name=binary)
-            print(f'Successfully uploaded {binary} to GitHub Release')
+            if os.path.exists(save_path):
+                print(f'Successfully downloaded {binary} to {save_path}')
+                # 上传到 GitHub Release
+                with open(save_path, 'rb') as file:
+                    release.upload_asset(file, name=binary)
+                print(f'Successfully uploaded {binary} to GitHub Release')
+            else:
+                print(f'Failed to download {binary} from {url}')
         except Exception as e:
             print(f'An error occurred while downloading or uploading {binary}: {e}')
 
