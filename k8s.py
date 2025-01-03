@@ -34,7 +34,7 @@ repo = g.get_repo(REPO_NAME)
 
 # 检查 Release 是否存在
 try:
-    test = get_assets(k8s_version)
+    test = repo.get_assets(k8s_version)
     print(test)
     print('------')
     release = repo.get_release(k8s_version)
