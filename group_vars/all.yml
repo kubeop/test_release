@@ -1,0 +1,232 @@
+# Download offline package
+download:
+  # 离线包保存目录，节点安装包从该目录拷贝
+  dest: /data/mirrors/k8s
+  # 下载超时时间
+  timeout: 60
+  # 重试次数
+  retries: 4
+  # 重试的时间间隔
+  retry_stagger: 5
+
+# NTP Settings
+ntp:
+  # 需要自定义NTP服务器时需设置为true
+  manage_config: false
+  servers:
+    - "ntp1.aliyun.com iburst"
+    - "ntp2.aliyun.com iburst"
+    - "ntp3.aliyun.com iburst"
+    - "ntp4.aliyun.com iburst"
+
+# Repository 软件源
+repo:
+  # 建议使用nexus配置代理使用
+  nvidia_container_toolkit_centos: "https://nvidia.github.io/libnvidia-container/stable/rpm/$basearch"
+  nvidia_container_toolkit_ubuntu: "deb https://nvidia.github.io/libnvidia-container/stable/deb/$(ARCH) /"
+
+# Kubernetes Cert
+cert:
+  # 签发集群整数保存目录，默认签发10年有限期证书
+  dir: /opt/certs
+  # 签发证书大小
+  size: 2048
+  # 签发证书的时间
+  day: 3650d
+
+# https://github.com/etcd-io/etcd
+etcd:
+  # etcd 安装包下载地址
+  # 如使用自建文件服务器，请保证下载路径为:{{etcd.download_url}}/{{etcd.version}}/etcd-{{etcd.version}}-linux-amd64.tar.gz
+  download_url: https://mirrors.chenby.cn/https://github.com/etcd-io/etcd/releases/download
+  # etcd 版本
+  version: v3.5.16
+  # etcd 数据目录，如使用多个目录映射同一块数据盘的方式，请勿修改默认目录
+  data_dir: "/var/lib/etcd"
+
+# High Availability
+# kube-apiserver负载均衡的信息
+# 如使用haproxy + keepalived请填写VIP及端口
+# 如使用公有云负载均衡请填写负载均衡IP及端口（需再安装之前自行配置）
+# 如使用域名，需提前配置解析。不使用域名时，请注释掉
+# 如使用haproxy + keepalived ，并且跟master节点部署在一起时，请修改port以避免端口冲突
+loadbalance:
+  ip: 10.43.75.200
+  port: 6443
+  # domain_name: apiserver.kubeop.com
+  # access_ip:
+  #   - 10.43.75.200
+
+# https://github.com/kubernetes/kubernetes
+kubernetes:
+  # kubernetes 二进制安装包下载地址
+  # 因官方下载源调整，且调整后下载较慢，故调整为个人仓库加速下载：https://github.com/kubeop/k8s/releases
+  # 使用Github Action同步二进制文件到Github Release, 并使用代理加速下载。该仓库也会同步相关容器镜像到阿里云镜像仓库
+  # 如使用自建文件服务器，请保证下载路径为:{{kubernetes.download_url}}/{{kubernetes.version}}/kube-apiserver
+  download_url: https://mirrors.chenby.cn/https://github.com/kubeop/k8s/releases/download
+  # kubernetes 版本
+  version: v1.32.0
+  # 集群Pod网段
+  pods_subnet: 172.16.0.0/12
+  # 集群Service网段
+  service_addresses: 192.168.0.0/16
+  # 节点Pod网段掩码大小
+  node_prefix: 25
+  # 节点最大Pod数量
+  kubelet_max_pods: 110
+  # kubelet 数据目录，如使用多个目录映射同一块数据盘的方式，请勿修改默认目录
+  kubelet_dir: "/var/lib/kubelet"
+  # kube-proxy模式，支持iptables和ipvs
+  kube_proxy_mode: ipvs
+  # 配置kube-proxy的ipvs调度策略，支持rr(轮询),wrr(加权轮训),lc(最少连接数),wlc(加权最少连接数),sh(源地址哈希),dh(目标地址哈希),sed(最短预期延迟),nq(最少队列)
+  scheduler: rr
+  # 使用 MetalLB、kube-vip 必须设置为 true 才能正常工作
+  strict_arp: false
+
+# https://github.com/containernetworking/plugins
+cniplugins:
+  # cni-plugins 安装包下载地址
+  # 如使用自建文件服务器，请保证下载路径为:{{cniplugins.download_url}}/{{cniplugins.version}}/cni-plugins-linux-amd64-{{cniplugins.version}}.tgz
+  download_url: https://mirrors.chenby.cn/https://github.com/containernetworking/plugins/releases/download
+  # cni-plugins 版本
+  version: v1.6.0
+
+# https://github.com/kubernetes-sigs/cri-tools
+critools:
+  # cri-tools 安装包下载地址
+  # 如使用自建文件服务器，请保证下载路径为:{{critools.download_url}}/{{critools.version}}/crictl-{{critools.version}}-linux-amd64.tar.gz
+  download_url: https://mirrors.chenby.cn/https://github.com/kubernetes-sigs/cri-tools/releases/download
+  # cri-tools 版本
+  version: v1.32.0
+
+# https://github.com/opencontainers/runc
+runc:
+  # runc 安装包下载地址
+  # 如使用自建文件服务器，请保证下载路径为:{{runc.download_url}}/{{runc.version}}/runc.amd64
+  download_url: https://mirrors.chenby.cn/https://github.com/opencontainers/runc/releases/download
+  # runc 版本，建议根据containerd版本对应
+  # https://github.com/containerd/containerd/blob/v1.7.24/script/setup/runc-version
+  version: v1.2.2
+
+# https://github.com/containerd/containerd
+containerd:
+  # containerd 安装包下载地址
+  # 如使用自建文件服务器，请保证下载路径为:{{containerd.download_url}}/v{{containerd.version}}/containerd-{{containerd.version}}-linux-amd64.tar.gz
+  download_url: https://mirrors.chenby.cn/https://github.com/containerd/containerd/releases/download
+  # containerd 版本
+  version: 1.7.24
+  # containerd 持久化数据目录，如使用多个目录映射同一块数据盘的方式，请勿修改默认目录
+  root: "/var/lib/containerd"
+  # containerd 临时数据目录
+  state: "/run/containerd"
+  # containerd oom_score
+  oom_score: -999
+  grpc:
+    max_recv_message_size: 16777216
+    max_send_message_size: 16777216
+  debug:
+    level: ""
+  metrics:
+    address: ""
+    grpc_histogram: false
+  cri:
+    sandbox_image: "registry.aliyuncs.com/google_containers/pause:3.10"
+    max_concurrent_downloads: 3
+    max_container_log_line_size: -1
+  containerd:
+    snapshotter: overlayfs
+  options:
+    SystemdCgroup: true
+  registries:
+    "docker.io": "https://registry-1.docker.io"
+    "registry.k8s.io": "https://registry.k8s.io"
+
+# Network Plugin
+network_plugin: calico
+# cilium need linux kernel >= 4.9.17
+cilium:
+  # https://github.com/cilium/cilium
+  version: v1.16.5
+  # {{cilium.registry}}/operator-generic:{{cilium.version}}
+  # {{cilium.registry}}/cilium:{{cilium.version}}
+  registry: registry.cn-hangzhou.aliyuncs.com/kubeop
+  # "disabled" or "vxlan" or "geneve"
+  network_mode: vxlan
+
+flannel:
+  # https://github.com/flannel-io/flannel
+  version: v0.26.2
+  plugin_version: v1.5.1-flannel2
+  # {{flannel.registry}}/flannel-cni-plugin:{{flannel.plugin_version}}
+  # {{flannel.registry}}/flannel:{{flannel.version}}
+  registry: registry.cn-hangzhou.aliyuncs.com/kubeop
+  # "vxlan" or "host-gw"
+  network_mode: vxlan
+  # 运行参数
+  args:
+    - "--ip-masq"
+    - "--kube-subnet-mgr"
+  # 当主机位于同一子网上时启用直接路由
+  directRouting: false
+  # 传出数据包的所需 MTU，如果未定义，则使用外部接口的 MTU。
+  # mtu: 1500
+
+calico:
+  # calicoctl 安装包下载地址
+  # 如使用自建文件服务器，请保证下载路径为: {{calico.download_url}}/calico/{{ calico.version }}/calicoctl-linux-amd64
+  download_url: https://mirrors.chenby.cn/https://github.com/projectcalico/calico/releases/download
+  # https://github.com/projectcalico/calico
+  version: v3.29.1
+  # {{calico.registry}}/kube-controllers:{{calico.version}}
+  # {{calico.registry}}/node:{{calico.version}}
+  # {{calico.registry}}/cni:{{calico.version}}
+  registry: registry.cn-hangzhou.aliyuncs.com/kubeop
+  # "ipip" or "bgp" or "mix"
+  network_mode: ipip
+  # mtu 默认为0，表示自动自动检测
+  mtu: 0
+  # 可指定网卡interface=eth.*或使用can-reach=网关
+  ip_autodetection_method: interface=eth0
+
+kuberouter:
+  # https://github.com/cloudnativelabs/kube-router
+  version: v2.4.1
+  # {{kube-router.registry}}/kube-router
+  registry: registry.cn-hangzhou.aliyuncs.com/kubeop
+  # Setups node CNI to allow hairpin mode, requires node reboots, see
+  # https://github.com/cloudnativelabs/kube-router/blob/master/docs/user-guide.md#hairpin-mode
+  # 即让Pod可以通过Service访问自己
+  hairpin_mode: true
+  # 启用Pod网络，通过iBGP通告和学习到Pod的路由
+  run_router: true
+  # 启用网络策略，设置iptables为Pod提供入口防火墙
+  run_firewall: true
+  # 启用服务代理，为Kubernetes服务设置IPVS
+  run_service_proxy: false
+
+# Addons
+coredns:
+  version: 1.11.3
+  # {{coredns.registry}}/coredns:{{coredns.version}}
+  registry: registry.cn-hangzhou.aliyuncs.com/kubeop
+nodelocaldns:
+  enabled: true
+  version: 1.23.1
+  # {{nodelocaldns.registry}}/k8s-dns-node-cache:{{nodelocaldns.version}}
+  registry: registry.cn-hangzhou.aliyuncs.com/kubeop
+  ip: 169.254.20.10
+metrics_server:
+  enabled: true
+  version: v0.7.2
+  # {{metrics_server.registry}}/metrics-server:{{metrics_server.version}}
+  registry: registry.cn-hangzhou.aliyuncs.com/kubeop
+npd:
+  enabled: false
+  version: v0.8.20
+  # {{npd.registry}}/node-problem-detector:{{npd.version}}
+  registry: registry.cn-hangzhou.aliyuncs.com/kubeop
+nvidia_device_plugin:
+  enabled: false
+  version: v0.17.0
+  # {{nvidia_device_plugin.registry}}/k8s-device-plugin:{{nvidia_device_plugin.version}}
+  registry: registry.cn-hangzhou.aliyuncs.com/kubeop
