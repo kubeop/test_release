@@ -1,5 +1,4 @@
 import yaml
-import wget
 import os
 import docker
 from docker.errors import APIError, NotFound
@@ -7,33 +6,6 @@ from docker.errors import APIError, NotFound
 # 读取 all.yml 文件 
 with open('group_vars/all.yml', 'r', encoding='utf-8') as file:
     data = yaml.load(file, Loader=yaml.FullLoader)
-
-k8s_version = data['kubernetes']['version']
-base_url = f'https://dl.k8s.io/release/{k8s_version}/bin/linux/amd64'
-
-binaries = [
-    'kube-apiserver',
-    'kube-controller-manager',
-    'kubectl',
-    'kubelet',
-    'kube-proxy',
-    'kube-scheduler'
-]
-
-save_dir = './k8s_binaries'
-os.makedirs(save_dir, exist_ok=True)
-
-# 遍历二进制文件列表并下载
-for binary in binaries:
-    url = f'{base_url}/{binary}'
-    save_path = os.path.join(save_dir, binary)
-    try:
-        print(f'Downloading {binary} from {url}')
-        wget.download(url, save_path)
-        print(f'Successfully downloaded {binary} to {save_path}')
-    except Exception as e:
-        print(f'An error occurred while downloading {binary}: {e}')
-
 
 # 阿里云 ACR 镜像仓库信息
 acr_repo = 'registry.cn-hangzhou.aliyuncs.com'
