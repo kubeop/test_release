@@ -26,6 +26,7 @@ repo:
   nvidia_container_toolkit_centos: "https://nvidia.github.io/libnvidia-container/stable/rpm/$basearch"
   nvidia_container_toolkit_ubuntu: "deb https://nvidia.github.io/libnvidia-container/stable/deb/$(ARCH) /"
 
+# fsdf
 # System Settings
 # Docker Settings
 # Kubernetes Cert

@@ -43,18 +43,8 @@ jobs:
         k8s_version=$(python -c "import yaml; data = yaml.safe_load(open('group_vars/all.yml')); print(data['kubernetes']['version'])")
         echo "k8s_version=$k8s_version" >> $GITHUB_ENV
 
-    - name: Check if tag exists
-      id: check_tag
-      run: |
-        if git ls-remote --tags origin | grep -q "refs/tags/${{ env.k8s_version }}"; then
-          echo "Tag exists"
-          echo "tag_exists=true" >> $GITHUB_ENV
-        else
-          echo "Tag does not exist"
-          echo "tag_exists=false" >> $GITHUB_ENV
-
     - name: Download
-      if: env.tag_exists == 'false'
+      if: ${{ !startsWith(github.ref, 'refs/tags/') }}
       run: |
         wget https://dl.k8s.io/release/${{ env.k8s_version }}/bin/linux/amd64/kubectl
         wget https://dl.k8s.io/release/${{ env.k8s_version }}/bin/linux/amd64/kube-apiserver
@@ -65,7 +55,7 @@ jobs:
       
     - name: Push Release
       uses: softprops/action-gh-release@v2
-      if: env.tag_exists == 'false'
+      if: ${{ !startsWith(github.ref, 'refs/tags/') }}
       with:
         token: ${{ secrets.GIT_TOKEN }}
         tag_name:  ${{ env.k8s_version }}
