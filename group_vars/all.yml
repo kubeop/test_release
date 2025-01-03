@@ -62,7 +62,7 @@ loadbalance:
   # access_ip:
   #   - 10.43.75.200
 
-# https://github.com/kubernetes/kubernetes
+# Kubernetes Settings
 kubernetes:
   # kubernetes 二进制安装包下载地址
   # 因官方下载源调整，且调整后下载较慢，故调整为个人仓库加速下载：https://github.com/kubeop/k8s/releases
