@@ -25,8 +25,8 @@ binaries = [
 save_dir = './k8s_binaries'
 os.makedirs(save_dir, exist_ok=True)
 
-GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
-REPO_NAME = os.environ.get('GITHUB_REPO')
+GITHUB_TOKEN = os.environ.get('GIT_TOKEN')
+REPO_NAME = os.environ.get('GIT_REPOS')
 
 # 初始化 GitHub 客户端
 g = Github(GITHUB_TOKEN)
