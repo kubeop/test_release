@@ -38,6 +38,8 @@ for binary in binaries:
 # 阿里云 ACR 镜像仓库信息
 acr_repo = 'registry.cn-hangzhou.aliyuncs.com'
 acr_namespace = 'kubeop'
+acr_username = os.environ.get('ACR_USERNAME')
+acr_password = os.environ.get('ACR_PASSWORD')
 
 images = {
     "quay.io/cilium/cilium": data['cilium']['version'],
