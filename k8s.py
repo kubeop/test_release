@@ -34,8 +34,9 @@ repo = g.get_repo(REPO_NAME)
 
 # 检查 Release 是否存在
 try:
-    test = repo.get_assets(k8s_version)
-    print(test)
+    release = repo.get_release(k8s_version)
+    assets = release.get_assets()
+    print(assets)
     print('------')
     release = repo.get_release(k8s_version)
     print(f'Release {k8s_version} already exists. Skipping upload.')
