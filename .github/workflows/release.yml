@@ -28,7 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install wget docker pyyaml PyGithub
+        pip install wget docker pyyaml PyGithub requests
 
     - name: Run script
       env:

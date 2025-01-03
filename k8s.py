@@ -1,6 +1,7 @@
 import yaml
 import wget
 import os
+import requests
 import docker
 from docker.errors import APIError, NotFound
 from github import Github
