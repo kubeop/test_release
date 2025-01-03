@@ -28,15 +28,15 @@ os.makedirs(save_dir, exist_ok=True)
 GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN')
 REPO_NAME = os.environ.get('GITHUB_REPO')
 
-print(f'GITHUB_TOKEN: {GITHUB_TOKEN}')
-print(f'REPO_NAME: {REPO_NAME}')
-
 # 初始化 GitHub 客户端
 g = Github(GITHUB_TOKEN)
 repo = g.get_repo(REPO_NAME)
 
 # 检查 Release 是否存在
 try:
+    test = get_assets(k8s_version)
+    print(test)
+    print('------')
     release = repo.get_release(k8s_version)
     print(f'Release {k8s_version} already exists. Skipping upload.')
 except GithubException as e:
