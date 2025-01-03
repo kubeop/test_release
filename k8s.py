@@ -37,11 +37,11 @@ repo = g.get_repo(REPO_NAME)
 
 # 检查 Release 是否存在
 try:
-    release = repo.get_release_by_tag(k8s_version)
+    release = repo.get_release(k8s_version)
     print(f'Release {k8s_version} already exists. Skipping upload.')
 except GithubException as e:
     if e.status == 404:
-        release = repo.create_git_release(k8s_version, f'Release {k8s_version}', "Release description")
+        release = repo.create_git_release(k8s_version, f'Release {k8s_version}', f'Release {k8s_version}')
         print(f'Created new release {k8s_version}.')
         # 遍历二进制文件列表并下载
         for binary in binaries:
